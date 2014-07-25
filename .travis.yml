@@ -1,0 +1,44 @@
+language:
+- objective-c
+env:
+  global:
+  - LATEST_TAG=1
+  - HDF5_VERSION=1.8.13
+  - GIT_SDIR=h5py
+  matrix:
+  - VERSION=2.7.8 NUMPY_VERSION=1.5.1
+  - VERSION=3.2.5 NUMPY_VERSION=1.7.1
+  - VERSION=3.3.5 NUMPY_VERSION=1.7.1
+  - VERSION=3.4.1 NUMPY_VERSION=1.7.1
+install:
+- source terryfy/travis_tools.sh
+- get_python_environment macpython $VERSION venv
+- pip install -f $NIPY_WHEELHOUSE numpy==$NUMPY_VERSION
+- pip install cython wheel
+- source terryfy/library_installers.sh
+- clean_builds
+- standard_install hdf5 $HDF5_VERSION .tar.bz2
+- if [ -n "$LATEST_TAG" ]; then checkout_closest_tag $GIT_SDIR; fi
+- cd $GIT_SDIR
+- export HDF5_DIR=$BUILD_PREFIX
+- python setup.py bdist_wheel
+- pip install delocate
+- delocate-wheel dist/*.whl
+- rename_wheels dist
+- pip install dist/*.whl
+- cd ..
+script:
+- pip install nose
+- mkdir tmp_for_test
+- cd tmp_for_test
+- python ../run_tests.py
+- cd ..
+before_deploy: cd $GIT_SDIR/dist
+deploy:
+  provider: cloudfiles
+  username: travis-worker
+  api_key:
+    secure: AwQprxdAy2phvNzs0+KCThPMIa0JmKSaLzmGq0S2LgxHhWJyTAFCu5/jay74J2GV7yb+kKaTuV0CJ9Zk5XoMkswVUEDsZqFviKjwXIXslR05XpfchoT7H3YIXEplgrpE14nBykOuaX3WFLJ2FWa6T59A3svai1KRCvzMgk828s4=
+  region: ORD
+  container: wheels
+  skip_cleanup: true

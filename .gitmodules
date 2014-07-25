@@ -1,0 +1,6 @@
+[submodule "terryfy"]
+	path = terryfy
+	url = git://github.com/matthew-brett/terryfy.git
+[submodule "h5py"]
+	path = h5py
+	url = git://github.com/h5py/h5py.git
