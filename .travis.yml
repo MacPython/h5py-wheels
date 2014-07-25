@@ -31,7 +31,7 @@ script:
 - pip install nose
 - mkdir tmp_for_test
 - cd tmp_for_test
-- python ../run_tests.py
+- python -c 'import sys, h5py; sys.exit(not h5py.run_tests().wasSuccessful())'
 - cd ..
 before_deploy: cd $GIT_SDIR/dist
 deploy:
