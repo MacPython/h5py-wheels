@@ -6,15 +6,15 @@ env:
   - HDF5_VERSION=1.8.13
   - GIT_SDIR=h5py
   matrix:
-  - VERSION=2.7.8 NUMPY_VERSION=1.5.1
+  - VERSION=2.7.8 NUMPY_VERSION=1.6.1
   - VERSION=3.2.5 NUMPY_VERSION=1.7.1
   - VERSION=3.3.5 NUMPY_VERSION=1.7.1
   - VERSION=3.4.1 NUMPY_VERSION=1.7.1
 install:
 - source terryfy/travis_tools.sh
 - get_python_environment macpython $VERSION venv
-- pip install -f $NIPY_WHEELHOUSE numpy==$NUMPY_VERSION
-- pip install cython wheel
+- pip install -f $NIPY_WHEELHOUSE numpy==$NUMPY_VERSION cython
+- pip install wheel
 - source terryfy/library_installers.sh
 - clean_builds
 - standard_install hdf5 $HDF5_VERSION .tar.bz2
