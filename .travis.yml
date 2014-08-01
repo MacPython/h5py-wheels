@@ -3,6 +3,7 @@ language:
 env:
   global:
   - LATEST_TAG=1
+  - SZIP_VERSION=2.1
   - HDF5_VERSION=1.8.13
   - GIT_SDIR=h5py
   matrix:
@@ -17,7 +18,8 @@ install:
 - pip install wheel
 - source terryfy/library_installers.sh
 - clean_builds
-- standard_install hdf5 $HDF5_VERSION .tar.bz2
+- standard_install szip $SZIP_VERSION .tar.gz szip- --enable-encoding=no
+- standard_install hdf5 $HDF5_VERSION .tar.bz2 hdf5- --with-szlib=$BUILD_PREFIX
 - if [ -n "$LATEST_TAG" ]; then checkout_closest_tag $GIT_SDIR; fi
 - cd $GIT_SDIR
 - export HDF5_DIR=$BUILD_PREFIX
