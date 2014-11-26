@@ -1,6 +1,5 @@
 # Run h5py tests
 import sys
-import unittest
-suite = unittest.TestLoader().discover("h5py")
-res = unittest.TextTestRunner(verbosity=3).run(suite)
+import h5py
+res = h5py.run_tests(verbose=3)
 sys.exit(not res.wasSuccessful())
