@@ -7,15 +7,19 @@ env:
   - HDF5_VERSION=1.8.13
   - GIT_SDIR=h5py
   matrix:
-  - VERSION=2.7.8 NUMPY_VERSION=1.6.1
+  - VERSION=2.7.10 NUMPY_VERSION=1.6.1
   - VERSION=3.2.5 NUMPY_VERSION=1.7.1
   - VERSION=3.3.5 NUMPY_VERSION=1.7.1
-  - VERSION=3.4.1 NUMPY_VERSION=1.7.1
+  - VERSION=3.4.3 NUMPY_VERSION=1.7.1
+  - VERSION=3.5.0 NUMPY_VERSION=1.7.1
 install:
 - source terryfy/travis_tools.sh
 - get_python_environment macpython $VERSION venv
-- pip install -f $NIPY_WHEELHOUSE numpy==$NUMPY_VERSION cython
-- pip install wheel
+- pip install cython
+- pip install -f $NIPY_WHEELHOUSE numpy==$NUMPY_VERSION
+- pip install delocate
+# Update to latest wheel package for Python 3.5
+- pip install -U wheel
 - source terryfy/library_installers.sh
 - clean_builds
 - standard_install szip $SZIP_VERSION .tar.gz szip- --enable-encoding=no
@@ -26,7 +30,6 @@ install:
 - cd $GIT_SDIR
 - export HDF5_DIR=$BUILD_PREFIX
 - python setup.py bdist_wheel
-- pip install delocate
 - delocate-wheel dist/*.whl
 - rename_wheels dist
 - pip install dist/*.whl
@@ -37,7 +40,10 @@ script:
 - cd tmp_for_test
 - python ../run_tests.py
 - cd ..
-before_deploy: cd $GIT_SDIR/dist
+before_deploy:
+- cd $GIT_SDIR/dist
+# Fix for https://github.com/travis-ci/travis-ci/issues/4635
+- rvm 1.9.3 do gem install net-ssh -v 2.9.2
 deploy:
   provider: cloudfiles
   username: travis-worker
