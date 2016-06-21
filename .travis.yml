@@ -1,51 +1,101 @@
-language:
-- objective-c
 env:
-  global:
-  - H5PY_COMMIT=latest-tag
-  - SZIP_VERSION=2.1
-  - HDF5_VERSION=1.8.13
-  - GIT_SDIR=h5py
-  matrix:
-  - VERSION=2.7.11 NUMPY_VERSION=1.6.1
-  - VERSION=3.3.5 NUMPY_VERSION=1.7.1
-  - VERSION=3.4.3 NUMPY_VERSION=1.7.1
-  - VERSION=3.5.1 NUMPY_VERSION=1.7.1
+    global:
+        - REPO_DIR=h5py
+        - BUILD_COMMIT=2.6.0
+        - PLAT=x86_64
+        - UNICODE_WIDTH=32
+        - NP_BUILD_DEP=1.6.2
+        - NP_TEST_DEP=1.7.1
+        - MANYLINUX_URL=https://nipy.bic.berkeley.edu/manylinux
+        - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
+        # Following generated with
+        # travis encrypt -r MacPython/h5py-wheels WHEELHOUSE_UPLOADER_SECRET=<the api key>
+        - secure:
+            "PN6SE942e7W6oG7Bpt7wmQEYzam8ZdD+rl5ggavqmfUTHHKYyb8VXpkg6bIEYDuD+CbRKUyn/TZoturQ0XBPTMG5Grzb9CkYaZvh2uxBhImTSeg7YRS3r4cQ7c9JAyQVhDzCIJxq76QtyyAuyDJ7AYPMwhhe7Tr/Ml1ifGfMhDI="
+
+language: python
+sudo: required
+dist: trusty
+services: docker
+
+matrix:
+  include:
+    - os: linux
+      python: 2.7
+    - os: linux
+      python: 2.7
+      env:
+        - UNICODE_WIDTH=16
+    - os: linux
+      python: 2.7
+      env:
+        - PLAT=i686
+    - os: linux
+      python: 2.7
+      env:
+        - PLAT=i686
+        - UNICODE_WIDTH=16
+    - os: linux
+      python: 3.4
+      env:
+        - NP_BUILD_DEP="1.7.1"
+    - os: linux
+      python: 3.4
+      env:
+        - PLAT=i686
+        - NP_BUILD_DEP="1.7.1"
+    - os: linux
+      python: 3.5
+      env:
+        - NP_BUILD_DEP="1.9.3"
+        - NP_TEST_DEP="1.9.3"
+    - os: linux
+      python: 3.5
+      env:
+        - PLAT=i686
+        - NP_BUILD_DEP="1.9.3"
+        - NP_TEST_DEP="1.9.3"
+    - os: osx
+      language: objective-c
+      env:
+        - TRAVIS_PYTHON_VERSION=2.7
+    - os: osx
+      language: objective-c
+      env:
+        - TRAVIS_PYTHON_VERSION=3.4
+        - NP_BUILD_DEP="1.7.1"
+    - os: osx
+      language: objective-c
+      env:
+        - TRAVIS_PYTHON_VERSION=3.5
+        - NP_BUILD_DEP="1.9.3"
+        - NP_TEST_DEP="1.9.3"
+
+before_install:
+    - BUILD_DEPENDS="numpy==$NP_BUILD_DEP"
+    - TEST_DEPENDS="numpy==$NP_TEST_DEP nose"
+    - source multibuild/common_utils.sh
+    - source multibuild/travis_steps.sh
+    - before_install
+
 install:
-- source terryfy/travis_tools.sh
-- get_python_environment macpython $VERSION venv
-- pip install cython
-- pip install -f $NIPY_WHEELHOUSE numpy==$NUMPY_VERSION
-- pip install delocate
-# Update to latest wheel package for Python 3.5
-- pip install -U wheel
-- source terryfy/library_installers.sh
-- clean_builds
-- standard_install szip $SZIP_VERSION .tar.gz szip- --enable-encoding=no
-- standard_install hdf5 $HDF5_VERSION .tar.bz2 hdf5- --with-szlib=$BUILD_PREFIX
-- if [ -n "$H5PY_COMMIT" ]; then
-      checkout_commit $GIT_SDIR $H5PY_COMMIT;
-  fi
-- cd $GIT_SDIR
-- export HDF5_DIR=$BUILD_PREFIX
-- python setup.py bdist_wheel
-- delocate-wheel dist/*.whl
-- rename_wheels dist
-- pip install dist/*.whl
-- cd ..
+    # Maybe get and clean and patch source
+    - clean_code $REPO_DIR $BUILD_COMMIT
+    - build_wheel $REPO_DIR $PLAT
+    # Remove test images
+    - pip install delocate
+    - python rm_test_images.py wheelhouse/*.whl
+
 script:
-- pip install nose
-- mkdir tmp_for_test
-- cd tmp_for_test
-- python ../run_tests.py
-- cd ..
-before_deploy:
-- cd $GIT_SDIR/dist
-deploy:
-  provider: cloudfiles
-  username: travis-worker
-  api_key:
-    secure: "g+W9YC6Fsl/uAtOiWU61QHGohYJoLxw2g4yMc5D7YRQtDLvTyvRihWRBQWRSIbq2B0TdAX76HqdicK1TGd/gs/R0o+J5O/A9FidmO03rWBBy1qqzZZFknKHdOUuiS7LrKzSOpTL2kE2xMsqIXTZuqeekRptOAfbG2TmTO0iWNH0="
-  region: ORD
-  container: wheels
-  skip_cleanup: true
+    # increase number of open files allowed for tests, on OSX
+    # https://github.com/matplotlib/matplotlib/issues/3315
+    - ulimit -n 4096
+    - install_run $PLAT
+
+after_success:
+    # Upload wheels to Rackspace container
+    - pip install wheelhouse-uploader
+    - python -m wheelhouse_uploader upload --local-folder
+          ${TRAVIS_BUILD_DIR}/wheelhouse/
+          --no-update-index
+          wheels

@@ -4,3 +4,6 @@
 [submodule "h5py"]
 	path = h5py
 	url = git://github.com/h5py/h5py.git
+[submodule "multibuild"]
+	path = multibuild
+	url = https://github.com/matthew-brett/multibuild.git
