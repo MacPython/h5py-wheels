@@ -81,6 +81,9 @@ before_install:
 install:
     # Maybe get and clean and patch source
     - clean_code $REPO_DIR $BUILD_COMMIT
+    # Patch for test run as root user.
+    # See: https://github.com/h5py/h5py/issues/696
+    - (cd h5py && patch -p1 < ../root-test.patch)
     - build_wheel $REPO_DIR $PLAT
 
 script:

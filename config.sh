@@ -9,9 +9,16 @@ function pre_build {
         export CXX=clang++
         brew install pkg-config
     fi
-    # Use local freetype for versions which support it
     source multibuild/library_builders.sh
     build_hdf5
+    # Add workaround for auditwheel bug:
+    # https://github.com/pypa/auditwheel/issues/29
+    if [ -z "$IS_OSX" ]; then
+        local bad_lib="/usr/local/lib/libhdf5.so"
+        if [ -z "$(readelf --dynamic $bad_lib | grep RUNPATH)" ]; then
+            patchelf --set-rpath $(dirname $bad_lib) $bad_lib
+        fi
+    fi
 }
 
 function run_tests {
