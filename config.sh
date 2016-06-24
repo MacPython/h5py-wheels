@@ -28,12 +28,14 @@ function build_wheel {
     brew install pkg-config
     # 32-bit wheel
     export CFLAGS="-arch i386"
+    export FFLAGS="-arch i386"
     local wheelhouse32=${wheelhouse}32
     mkdir -p $wheelhouse32
     build_pip_wheel "$repo_dir"
     mv ${wheelhouse}/*whl $wheelhouse32
     # 64-bit wheel
     export CFLAGS="-arch x86_64"
+    export FFLAGS="-arch x86_64"
     # Force rebuild of all libs
     rm *-stamp
     build_pip_wheel "$repo_dir"
