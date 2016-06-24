@@ -72,7 +72,7 @@ matrix:
         - NP_TEST_DEP="1.9.3"
 
 before_install:
-    - BUILD_DEPENDS="numpy==$NP_BUILD_DEP"
+    - BUILD_DEPENDS="numpy==$NP_BUILD_DEP Cython"
     - TEST_DEPENDS="numpy==$NP_TEST_DEP nose"
     - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
