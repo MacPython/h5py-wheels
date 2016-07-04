@@ -14,60 +14,66 @@ env:
             "PN6SE942e7W6oG7Bpt7wmQEYzam8ZdD+rl5ggavqmfUTHHKYyb8VXpkg6bIEYDuD+CbRKUyn/TZoturQ0XBPTMG5Grzb9CkYaZvh2uxBhImTSeg7YRS3r4cQ7c9JAyQVhDzCIJxq76QtyyAuyDJ7AYPMwhhe7Tr/Ml1ifGfMhDI="
 
 language: python
+# Default Python version is usually 2.7
+python: 3.5
 sudo: required
 dist: trusty
 services: docker
 
 matrix:
+  exclude:
+      # Exclude the default Python 3.5 build
+      - python: 3.5
   include:
     - os: linux
-      python: 2.7
-    - os: linux
-      python: 2.7
       env:
+        - MB_PYTHON_VERSION=2.7
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=2.7
         - UNICODE_WIDTH=16
     - os: linux
-      python: 2.7
       env:
+        - MB_PYTHON_VERSION=2.7
         - PLAT=i686
     - os: linux
-      python: 2.7
       env:
+        - MB_PYTHON_VERSION=2.7
         - PLAT=i686
         - UNICODE_WIDTH=16
     - os: linux
-      python: 3.4
       env:
+        - MB_PYTHON_VERSION=3.4
         - NP_BUILD_DEP="1.7.1"
     - os: linux
-      python: 3.4
       env:
+        - MB_PYTHON_VERSION=3.4
         - PLAT=i686
         - NP_BUILD_DEP="1.7.1"
     - os: linux
-      python: 3.5
       env:
+        - MB_PYTHON_VERSION=3.5
         - NP_BUILD_DEP="1.9.3"
         - NP_TEST_DEP="1.9.3"
     - os: linux
-      python: 3.5
       env:
+        - MB_PYTHON_VERSION=3.5
         - PLAT=i686
         - NP_BUILD_DEP="1.9.3"
         - NP_TEST_DEP="1.9.3"
     - os: osx
       language: objective-c
       env:
-        - TRAVIS_PYTHON_VERSION=2.7
+        - MB_PYTHON_VERSION=2.7
     - os: osx
       language: objective-c
       env:
-        - TRAVIS_PYTHON_VERSION=3.4
+        - MB_PYTHON_VERSION=3.4
         - NP_BUILD_DEP="1.7.1"
     - os: osx
       language: objective-c
       env:
-        - TRAVIS_PYTHON_VERSION=3.5
+        - MB_PYTHON_VERSION=3.5
         - NP_BUILD_DEP="1.9.3"
         - NP_TEST_DEP="1.9.3"
 
