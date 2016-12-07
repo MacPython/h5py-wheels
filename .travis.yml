@@ -92,9 +92,6 @@ install:
     - (cd h5py && patch -p1 < ../root-test.patch)
     - build_wheel $REPO_DIR $PLAT
 
-before_script:
-    - rvm get head # https://github.com/travis-ci/travis-ci/issues/6307
-
 script:
     - install_run $PLAT
 
