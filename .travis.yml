@@ -98,7 +98,7 @@ matrix:
         - NP_TEST_DEP="1.11.3"
 
 before_install:
-    - if ["$TRAVIS_BRANCH" == "daily" ]; then
+    - if [ "$TRAVIS_BRANCH" == "daily" ]; then
           CONTAINER="pre-release";
           BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT};
       else
