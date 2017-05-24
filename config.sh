@@ -32,7 +32,7 @@ function build_osx_wheel {
     # Build dual arch wheel
     export CC=clang
     export CXX=clang++
-    brew install pkg-config
+    install_pkg_config
     # 32-bit wheel
     export CFLAGS="-arch i386"
     export FFLAGS="-arch i386"
