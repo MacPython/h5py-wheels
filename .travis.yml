@@ -124,5 +124,5 @@ after_success:
     - pip install wheelhouse-uploader
     - python -m wheelhouse_uploader upload --local-folder
           ${TRAVIS_BUILD_DIR}/wheelhouse/
-          --no-update-index
-          wheels
+          $UPLOAD_ARGS
+          $CONTAINER
