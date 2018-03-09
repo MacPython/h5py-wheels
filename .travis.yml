@@ -83,6 +83,7 @@ matrix:
       language: generic
       env:
         - MB_PYTHON_VERSION=2.7
+        - UNITTEST2='unittest2'
     - os: osx
       language: generic
       env:
