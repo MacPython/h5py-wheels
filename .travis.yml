@@ -31,19 +31,23 @@ matrix:
     - os: linux
       env:
         - MB_PYTHON_VERSION=2.7
+        - UNITTEST2='unittest2'
     - os: linux
       env:
         - MB_PYTHON_VERSION=2.7
         - UNICODE_WIDTH=16
+        - UNITTEST2='unittest2'
     - os: linux
       env:
         - MB_PYTHON_VERSION=2.7
         - PLAT=i686
+        - UNITTEST2='unittest2'
     - os: linux
       env:
         - MB_PYTHON_VERSION=2.7
         - PLAT=i686
         - UNICODE_WIDTH=16
+        - UNITTEST2='unittest2'
     - os: linux
       env:
         - MB_PYTHON_VERSION=3.4
@@ -106,7 +110,7 @@ before_install:
           UPLOAD_ARGS="--no-update-index";
       fi
     - BUILD_DEPENDS="numpy==$NP_BUILD_DEP Cython"
-    - TEST_DEPENDS="numpy==$NP_TEST_DEP nose"
+    - TEST_DEPENDS="numpy==$NP_TEST_DEP nose $UNITTEST2"
     - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
     - before_install
