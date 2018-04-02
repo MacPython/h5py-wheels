@@ -108,7 +108,7 @@ before_install:
           CONTAINER=wheels;
           UPLOAD_ARGS="--no-update-index";
       fi
-    - BUILD_DEPENDS="numpy==$NP_BUILD_DEP Cython pkgconfig"
+    - BUILD_DEPENDS="numpy==$NP_BUILD_DEP Cython pkgconfig six"
     - TEST_DEPENDS="numpy==$NP_TEST_DEP nose unittest2"
     - source multibuild/common_utils.sh
     - source multibuild/travis_steps.sh
