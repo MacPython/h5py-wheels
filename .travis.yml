@@ -12,7 +12,7 @@ env:
         # travis encrypt -r MacPython/h5py-wheels WHEELHOUSE_UPLOADER_SECRET=<the api key>
         - secure:
             "PN6SE942e7W6oG7Bpt7wmQEYzam8ZdD+rl5ggavqmfUTHHKYyb8VXpkg6bIEYDuD+CbRKUyn/TZoturQ0XBPTMG5Grzb9CkYaZvh2uxBhImTSeg7YRS3r4cQ7c9JAyQVhDzCIJxq76QtyyAuyDJ7AYPMwhhe7Tr/Ml1ifGfMhDI="
-        # Commit when running from daily branch
+        # Commit when running from master branch
         - DAILY_COMMIT=master
 
 language: python
@@ -105,7 +105,7 @@ before_install:
     # See:
     # https://github.com/travis-ci/travis-ci/issues/8920#issuecomment-352661024
     - python -c "import fcntl; fcntl.fcntl(1, fcntl.F_SETFL, 0)"
-    - if [ "$TRAVIS_BRANCH" == "daily" ]; then
+    - if [ "$TRAVIS_BRANCH" == "master" ]; then
           CONTAINER="pre-release";
           BUILD_COMMIT=${DAILY_COMMIT:-$BUILD_COMMIT};
       else
