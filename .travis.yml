@@ -49,15 +49,6 @@ matrix:
         - UNITTEST2='unittest2'
     - os: linux
       env:
-        - MB_PYTHON_VERSION=3.4
-        - NP_BUILD_DEP="1.7.1"
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.4
-        - PLAT=i686
-        - NP_BUILD_DEP="1.7.1"
-    - os: linux
-      env:
         - MB_PYTHON_VERSION=3.5
         - NP_BUILD_DEP="1.9.3"
         - NP_TEST_DEP="1.9.3"
@@ -94,11 +85,6 @@ matrix:
       env:
         - MB_PYTHON_VERSION=2.7
         - UNITTEST2='unittest2'
-    - os: osx
-      language: generic
-      env:
-        - MB_PYTHON_VERSION=3.4
-        - NP_BUILD_DEP="1.7.1"
     - os: osx
       language: generic
       env:
