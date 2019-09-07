@@ -6,7 +6,7 @@ import h5py
 default_filters = set(('shuffle', 'gzip', 'fletcher32', 'scaleoffset'))
 szip_filters = default_filters.union(('szip',))
 
-good = bool(h5py.run_tests(verbose=3))
+good = bool(h5py.run_tests())
 
 decode_missing = szip_filters.difference(h5py.filters.decode)
 if decode_missing:
